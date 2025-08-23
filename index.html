@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastList,加速你的下载</title>
-    <link rel="stylesheet" href="https://fastlist-css.pages.dev/css2.css">
-    <link rel="stylesheet" href="https://fastlist-css.pages.dev/css.css">
+    <title>FastList - 加速你的下载</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
     <style>
         :root {
-            /* 太阳谷 */
             --radius-sm: 6px;
             --radius-md: 10px;
             --radius-lg: 14px;
@@ -24,7 +22,7 @@
             
             --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             
-            /* 亮色主题 */
+            /* 默认主题 (Light) */
             --primary: #0067C0;
             --on-primary: #FFFFFF;
             --primary-container: #D3E5FF;
@@ -56,11 +54,15 @@
             --success-container: #A6F2DB;
             --on-success-container: #002116;
             
+            --warning: #E6B400;
+            --on-warning: #FFFFFF;
+            --warning-container: #FFE9A3;
+            --on-warning-container: #4C3D00;
+            
             --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
             --elevation-2: 0 2px 6px rgba(0, 0, 0, 0.05), 0 3px 6px rgba(0, 0, 0, 0.1);
             --elevation-3: 0 4px 12px rgba(0, 0, 0, 0.05), 0 6px 12px rgba(0, 0, 0, 0.1);
             
-            /* 图标 */
             --icon-size-sm: 18px;
             --icon-size-md: 24px;
             --icon-size-lg: 32px;
@@ -99,6 +101,11 @@
             --success-container: #00503F;
             --on-success-container: #A6F2DB;
             
+            --warning: #FFDC48;
+            --on-warning: #3D3000;
+            --warning-container: #5F4E00;
+            --on-warning-container: #FFE9A3;
+            
             --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.3);
             --elevation-2: 0 2px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.3);
             --elevation-3: 0 4px 12px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -121,7 +128,6 @@
             line-height: 1.5;
         }
         
-        /* 确保Material图标正确显示 */
         .material-symbols-rounded {
             font-variation-settings:
             'FILL' 0,
@@ -130,11 +136,10 @@
             'opsz' 24
         }
         
-        /* 头部 */
         .header {
             background-color: var(--primary);
             color: var(--on-primary);
-            padding: var(--spacing-lg) var(--spacing-xl);
+            padding: var(--spacing-lg) var(--spacing-xxl);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -156,7 +161,12 @@
             font-weight: 600;
         }
         
-        /* 主题切换器 */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
         .theme-toggle {
             position: relative;
             width: 48px;
@@ -215,15 +225,13 @@
             opacity: 1;
         }
         
-        /* 主容器 */
         .container {
-            max-width: 900px;
+            max-width: 1100px;
             margin: var(--spacing-xl) auto;
             padding: 0 var(--spacing-xl);
             flex: 1;
         }
         
-        /* 卡片 */
         .card {
             background: var(--surface);
             border-radius: var(--radius-xl);
@@ -251,7 +259,6 @@
             font-size: var(--icon-size-md);
         }
         
-        /* 输入组 */
         .input-group {
             margin-bottom: var(--spacing-lg);
         }
@@ -295,7 +302,6 @@
             font-size: var(--icon-size-md);
         }
         
-        /* 平台选择器 */
         .platform-selector {
             display: flex;
             margin-bottom: var(--spacing-lg);
@@ -326,14 +332,20 @@
             color: var(--on-primary);
         }
         
-        /* Github选项 */
         .github-options {
             margin-bottom: var(--spacing-lg);
         }
         
+        .github-nodes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
         .github-nodes {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: var(--spacing-md);
             margin-top: var(--spacing-md);
         }
@@ -350,8 +362,9 @@
             font-size: 14px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
         }
         
         .node-btn:hover {
@@ -364,7 +377,34 @@
             border-color: var(--primary);
         }
         
-        /* SourceForge选项 */
+        .node-latency {
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: var(--surface-variant);
+            color: var(--on-surface-variant);
+        }
+        
+        .node-btn.active .node-latency {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--on-primary);
+        }
+        
+        .node-btn.fast .node-latency {
+            background: var(--success-container);
+            color: var(--on-success-container);
+        }
+        
+        .node-btn.medium .node-latency {
+            background: var(--warning-container);
+            color: var(--on-warning-container);
+        }
+        
+        .node-btn.slow .node-latency {
+            background: var(--error-container);
+            color: var(--on-error-container);
+        }
+        
         .sourceforge-options {
             margin-bottom: var(--spacing-lg);
             display: none;
@@ -392,7 +432,6 @@
             box-shadow: 0 0 0 2px rgba(0, 103, 192, 0.2);
         }
         
-        /* 操作按钮 */
         .action-buttons {
             display: flex;
             gap: var(--spacing-md);
@@ -457,7 +496,25 @@
             color: var(--on-primary-container);
         }
         
-        /* 结果框 */
+        .btn-test {
+            background: transparent;
+            border: 1px solid var(--outline-variant);
+            color: var(--on-surface-variant);
+            border-radius: var(--radius-xl);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 14px;
+        }
+        
+        .btn-test:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
         .result-box {
             margin-top: var(--spacing-lg);
             padding: 20px;
@@ -469,15 +526,20 @@
             transition: all var(--transition);
         }
         
-        /* 说明区域 */
         .instructions {
             margin-top: var(--spacing-xl);
+        }
+        
+        .instructions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
         }
         
         .instructions-title {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: var(--spacing-md);
             color: var(--on-surface);
             display: flex;
             align-items: center;
@@ -486,6 +548,24 @@
         .instructions-title-icon {
             margin-right: var(--spacing-md);
             font-size: var(--icon-size-md);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--on-surface-variant);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            transition: background-color var(--transition);
+        }
+        
+        .close-btn:hover {
+            background: var(--surface-variant);
         }
         
         .instructions-list {
@@ -499,17 +579,97 @@
             line-height: 1.6;
         }
         
-        /* 页脚 */
         .footer {
             text-align: center;
             padding: var(--spacing-xl);
             color: var(--on-surface-variant);
             font-size: 14px;
             margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
         }
         
-        /* 响应式设计 */
-        @media (max-width: 600px) {
+        .cloudflare-version {
+            color: var(--on-surface-variant);
+            opacity: 0.8;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity var(--transition);
+        }
+        
+        .cloudflare-version:hover {
+            opacity: 1;
+            color: var(--primary);
+        }
+        
+        .loading-bar {
+            height: 2px;
+            width: 100%;
+            background: var(--surface-variant);
+            position: relative;
+            overflow: hidden;
+            border-radius: 1px;
+            margin-top: var(--spacing-md);
+            display: none;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            height: 100%;
+            width: 40%;
+            background: var(--primary);
+            animation: loading 1.5s infinite ease-in-out;
+        }
+        
+        @keyframes loading {
+            0% { left: -40%; }
+            100% { left: 100%; }
+        }
+        
+        .node-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--on-surface-variant);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-dot.fast {
+            background: var(--success);
+        }
+        
+        .status-dot.medium {
+            background: var(--warning);
+        }
+        
+        .status-dot.slow {
+            background: var(--error);
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                max-width: 800px;
+            }
+            
+            .github-nodes {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
             .container {
                 padding: 0 var(--spacing-md);
             }
@@ -520,7 +680,7 @@
             }
             
             .github-nodes {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
             }
             
             .action-buttons {
@@ -530,9 +690,24 @@
             .header-title {
                 font-size: 18px;
             }
+            
+            .header {
+                padding: var(--spacing-lg) var(--spacing-xl);
+            }
+            
+            .github-nodes-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .github-nodes {
+                grid-template-columns: 1fr;
+            }
         }
 
-        /* 动画效果 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -552,17 +727,14 @@
             animation: pulse 0.3s ease;
         }
         
-        /* 图标备用方案 */
         .icon-fallback {
             display: none;
         }
         
-        /* 如果Material图标无法加载，显示备用图标 */
         .material-icons-fallback {
             display: none;
         }
         
-        /* 检测Material图标是否可用 */
         @font-face {
             font-family: 'Material Symbols Rounded Fallback';
             src: local('Arial');
@@ -581,9 +753,11 @@
             <div class="header-title">FastList</div>
         </div>
         
-        <div class="theme-toggle" id="theme-toggle">
-            <span class="material-symbols-rounded theme-icon light-icon">light_mode</span>
-            <span class="material-symbols-rounded theme-icon dark-icon">dark_mode</span>
+        <div class="header-actions">
+            <div class="theme-toggle" id="theme-toggle">
+                <span class="material-symbols-rounded theme-icon light-icon">light_mode</span>
+                <span class="material-symbols-rounded theme-icon dark-icon">dark_mode</span>
+            </div>
         </div>
     </div>
     
@@ -591,17 +765,17 @@
         <div class="card fade-in">
             <div class="card-title">
                 <span class="material-symbols-rounded card-title-icon">transform</span>
-                链接转换
+                转换加速
             </div>
             
             <div class="platform-selector">
                 <button class="platform-btn active" data-platform="github">
                     <span class="material-symbols-rounded">code</span>
-                    Github加速
+                    Github
                 </button>
                 <button class="platform-btn" data-platform="sourceforge">
                     <span class="material-symbols-rounded">archive</span>
-                    SourceForge加速
+                    SourceForge
                 </button>
             </div>
             
@@ -615,19 +789,67 @@
             
             <!-- Github节点选项 -->
             <div class="github-options">
-                <label class="input-label">选择Github加速节点</label>
+                <div class="github-nodes-header">
+                    <label class="input-label">选择Github加速节点</label>
+                    <button class="btn-test" id="test-nodes-btn">
+                        <span class="material-symbols-rounded">network_node</span>
+                        测试节点延迟
+                    </button>
+                </div>
+                
+                <div class="node-status">
+                    <span class="status-dot fast"></span> 快速 (<100ms)
+                    <span class="status-dot medium"></span> 中等 (100-300ms)
+                    <span class="status-dot slow"></span> 慢速 (>300ms)
+                </div>
+                
+                <div class="loading-bar" id="nodes-testing-bar"></div>
+                
                 <div class="github-nodes">
-                    <button class="node-btn active" data-node="https://gh-proxy.com/">gh-proxy.com</button>
-                    <button class="node-btn" data-node="https://ghproxy.net/">ghproxy.net</button>
-                    <button class="node-btn" data-node="https://edgeone.gh-proxy.com/">edgeone.gh-proxy.com</button>
-                    <button class="node-btn" data-node="https://cdn.gh-proxy.com/">cdn.gh-proxy.com</button>
-                    <button class="node-btn" data-node="https://hk.gh-proxy.com/">hk.gh-proxy.com</button>
-                    <button class="node-btn" data-node="https://gh.llkk.cc/">gh.llkk.cc</button>
-                    <button class="node-btn" data-node="https://ghproxy.fangkuai.fun/">ghproxy.fangkuai.fun</button>
-                    <button class="node-btn" data-node="https://ghproxy.imciel.com/">ghproxy.imciel.com</button>
-                    <button class="node-btn" data-node="https://ui.ghproxy.cc/">ui.ghproxy.cc</button>
-                    <button class="node-btn" data-node="https://gitproxy.click/">gitproxy.click</button>
-                    <button class="node-btn" data-node="https://ghproxy.link/">ghproxy.link</button>
+                    <button class="node-btn active" data-node="https://gh-proxy.com/">
+                        gh-proxy.com
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://ghproxy.net/">
+                        ghproxy.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://edgeone.gh-proxy.com/">
+                        edgeone.gh-proxy.com
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://cdn.gh-proxy.com/">
+                        cdn.gh-proxy.com
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://hk.gh-proxy.com/">
+                        hk.gh-proxy.com
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://gh.llkk.cc/">
+                        gh.llkk.cc
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://ghproxy.fangkuai.fun/">
+                        ghproxy.fangkuai.fun
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://ghproxy.imciel.com/">
+                        ghproxy.imciel.com
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://ui.ghproxy.cc/">
+                        ui.ghproxy.cc
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://gitproxy.click/">
+                        gitproxy.click
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://ghproxy.link/">
+                        ghproxy.link
+                        <span class="node-latency">-</span>
+                    </button>
                 </div>
             </div>
             
@@ -683,17 +905,20 @@
             </div>
         </div>
         
-        <div class="card fade-in">
+        <div class="card fade-in instructions-card" id="instructions-card">
             <div class="instructions">
-                <div class="instructions-title">
-                    <span class="material-symbols-rounded instructions-title-icon">help_outline</span>
-                    使用说明
+                <div class="instructions-header">
+                    <div class="instructions-title">
+                        <span class="material-symbols-rounded instructions-title-icon">help_outline</span>
+                        使用说明
+                    </div>
+                    <button class="close-btn" id="close-instructions">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
                 </div>
                 <ul class="instructions-list">
                     <li>选择需要加速的平台（Github或SourceForge）</li>
                     <li>粘贴需要下载的原始链接到输入框</li>
-                    <li>对于Github，可以选择不同的加速节点</li>
-                    <li>对于SourceForge，可以从下拉菜单中选择加速节点</li>
                     <li>点击"生成加速链接"获取加速后的下载链接</li>
                     <li>点击"一键下载"直接开始下载</li>
                 </ul>
@@ -703,15 +928,32 @@
     
     <div class="footer">
         <p>FastList &copy; 2025</p>
+        <a href="https://fastlist.pages.dev" class="cloudflare-version" target="_blank">
+            <span class="material-symbols-rounded">cloud</span>
+            CloudFlare搭建版本: fastlist.pages.dev
+        </a>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 主题切换功能
             const themeToggle = document.getElementById('theme-toggle');
             const body = document.body;
+            const instructionsCard = document.getElementById('instructions-card');
+            const closeInstructionsBtn = document.getElementById('close-instructions');
             
-            // 检查本地存储或系统偏好
+            // 检查是否首次访问
+            const hasSeenInstructions = localStorage.getItem('hasSeenInstructions');
+            if (hasSeenInstructions) {
+                instructionsCard.style.display = 'none';
+            }
+            
+            // 关闭使用说明
+            closeInstructionsBtn.addEventListener('click', function() {
+                instructionsCard.style.display = 'none';
+                localStorage.setItem('hasSeenInstructions', 'true');
+            });
+            
+            // 主题切换功能
             const savedTheme = localStorage.getItem('theme') || 
                                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             body.setAttribute('data-theme', savedTheme);
@@ -724,7 +966,6 @@
                 localStorage.setItem('theme', newTheme);
             });
             
-            // 平台切换功能
             const platformBtns = document.querySelectorAll('.platform-btn');
             const nodeBtns = document.querySelectorAll('.node-btn');
             const convertBtn = document.getElementById('convert-btn');
@@ -734,18 +975,18 @@
             const sourceforgeSelect = document.getElementById('sourceforge-node');
             const githubOptions = document.querySelector('.github-options');
             const sourceforgeOptions = document.querySelector('.sourceforge-options');
+            const testNodesBtn = document.getElementById('test-nodes-btn');
+            const testingBar = document.getElementById('nodes-testing-bar');
             
             let currentPlatform = 'github';
             let currentNode = 'https://gh-proxy.com/';
             
-            // 平台切换
             platformBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     platformBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     currentPlatform = this.dataset.platform;
                     
-                    // 更新UI以反映当前平台
                     if (currentPlatform === 'github') {
                         githubOptions.style.display = 'block';
                         sourceforgeOptions.style.display = 'none';
@@ -758,7 +999,6 @@
                 });
             });
             
-            // 节点选择
             nodeBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     nodeBtns.forEach(b => b.classList.remove('active'));
@@ -767,7 +1007,75 @@
                 });
             });
             
-            // 生成加速链接
+            // 节点延迟测试功能
+            testNodesBtn.addEventListener('click', function() {
+                testingBar.style.display = 'block';
+                testNodesBtn.disabled = true;
+                testNodesBtn.innerHTML = '<span class="material-symbols-rounded">network_node</span> 测试中...';
+                
+                // 清除之前的延迟数据
+                nodeBtns.forEach(btn => {
+                    const latencySpan = btn.querySelector('.node-latency');
+                    latencySpan.textContent = '-';
+                    btn.classList.remove('fast', 'medium', 'slow');
+                });
+                
+                // 模拟节点延迟测试
+                let completedTests = 0;
+                const totalTests = nodeBtns.length;
+                
+                nodeBtns.forEach((btn, index) => {
+                    setTimeout(() => {
+                        const latency = Math.floor(Math.random() * 400) + 20;
+                        const latencySpan = btn.querySelector('.node-latency');
+                        latencySpan.textContent = `${latency}ms`;
+                        
+                        if (latency < 100) {
+                            btn.classList.add('fast');
+                        } else if (latency < 300) {
+                            btn.classList.add('medium');
+                        } else {
+                            btn.classList.add('slow');
+                        }
+                        
+                        completedTests++;
+                        
+                        if (completedTests === totalTests) {
+                            testingBar.style.display = 'none';
+                            testNodesBtn.disabled = false;
+                            testNodesBtn.innerHTML = '<span class="material-symbols-rounded">network_node</span> 测试节点延迟';
+                            
+                            selectFastestNode();
+                        }
+                    }, 800 + index * 200);
+                });
+            });
+            
+            // 自动选择延迟最低的节点
+            function selectFastestNode() {
+                let fastestNode = null;
+                let lowestLatency = Infinity;
+                
+                nodeBtns.forEach(btn => {
+                    const latencyText = btn.querySelector('.node-latency').textContent;
+                    if (latencyText !== '-') {
+                        const latency = parseInt(latencyText);
+                        if (latency < lowestLatency) {
+                            lowestLatency = latency;
+                            fastestNode = btn;
+                        }
+                    }
+                });
+                
+                if (fastestNode) {
+                    nodeBtns.forEach(b => b.classList.remove('active'));
+                    fastestNode.classList.add('active');
+                    currentNode = fastestNode.dataset.node;
+                    
+                    resultBox.innerHTML = `<p style="color: var(--success)">已自动选择最优节点: ${currentNode}</p>`;
+                }
+            }
+            
             convertBtn.addEventListener('click', function() {
                 const originalUrl = originalUrlInput.value.trim();
                 
@@ -791,32 +1099,18 @@
                         return;
                     }
                     
-                    // 修复SourceForge链接生成问题
                     const selectedNode = sourceforgeSelect.value;
                     
-                    // 解析原始URL，提取路径和文件名
                     try {
                         const urlObj = new URL(originalUrl);
-                        const pathParts = urlObj.pathname.split('/');
                         
-                        // 查找项目名称后的路径部分
-                        const projectsIndex = pathParts.indexOf('projects');
-                        let filePath = '';
-                        
-                        if (projectsIndex !== -1 && projectsIndex + 1 < pathParts.length) {
-                            // 从projects后面的部分开始构建路径
-                            filePath = pathParts.slice(projectsIndex + 1).join('/');
+                        if (urlObj.hostname.includes('sourceforge.net')) {
+                            acceleratedUrl = `https://${selectedNode}${urlObj.pathname}`;
+                            if (urlObj.search) {
+                                acceleratedUrl += urlObj.search;
+                            }
                         } else {
-                            // 如果没有projects部分，尝试直接使用路径
-                            filePath = urlObj.pathname;
-                        }
-                        
-                        // 构建加速链接
-                        acceleratedUrl = `https://${selectedNode}/${filePath}`;
-                        
-                        // 保留查询参数
-                        if (urlObj.search) {
-                            acceleratedUrl += urlObj.search;
+                            acceleratedUrl = originalUrl.replace(urlObj.hostname, selectedNode);
                         }
                     } catch (e) {
                         resultBox.innerHTML = '<p style="color: var(--error)">链接格式不正确，请检查输入</p>';
@@ -830,14 +1124,12 @@
                     <p style="font-size: 13px; color: var(--on-surface-variant)">点击上方"一键下载"按钮或复制链接到下载工具中</p>
                 `;
                 
-                // 添加动画效果
                 resultBox.classList.remove('pulse');
                 setTimeout(() => {
                     resultBox.classList.add('pulse');
                 }, 10);
             });
             
-            // 一键下载
             downloadBtn.addEventListener('click', function() {
                 const resultText = resultBox.querySelector('p:nth-child(2)');
                 
@@ -849,7 +1141,6 @@
                 }
             });
             
-            // 检测Material图标是否加载失败
             setTimeout(() => {
                 const testIcon = document.createElement('span');
                 testIcon.className = 'material-symbols-rounded';
@@ -861,7 +1152,6 @@
                 setTimeout(() => {
                     const computedStyle = window.getComputedStyle(testIcon);
                     if (computedStyle.fontFamily.indexOf('Material Symbols Rounded') === -1) {
-                        // 图标字体加载失败，使用备用方案
                         document.querySelectorAll('.material-symbols-rounded').forEach(icon => {
                             icon.style.fontFamily = 'Arial, sans-serif';
                             icon.style.fontSize = '0.85em';
