@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FastList - 加速你的下载</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link rel="stylesheet" href="https://fastlist-css.pages.dev/css2.css">
+    <link rel="stylesheet" href="https://fastlist-css.pages.dev/css.css">
     <style>
         :root {
+            /* 原有的CSS变量保持不变 */
             --radius-sm: 6px;
             --radius-md: 10px;
             --radius-lg: 14px;
@@ -410,26 +412,39 @@
             display: none;
         }
         
-        .sourceforge-select {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid var(--outline-variant);
-            border-radius: var(--radius-md);
-            font-size: 16px;
-            background: var(--surface);
-            color: var(--on-surface);
-            margin-top: var(--spacing-md);
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2343474E'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 16px;
+        .sourceforge-nodes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
         }
         
-        .sourceforge-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(0, 103, 192, 0.2);
+        .sourceforge-nodes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .universal-options {
+            margin-bottom: var(--spacing-lg);
+            display: none;
+        }
+        
+        .universal-tool-info {
+            background: var(--surface-variant);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--spacing-md);
+            font-size: 14px;
+            color: var(--on-surface-variant);
+        }
+        
+        .universal-tool-info code {
+            background: var(--surface);
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            font-family: monospace;
         }
         
         .action-buttons {
@@ -664,7 +679,7 @@
                 max-width: 800px;
             }
             
-            .github-nodes {
+            .github-nodes, .sourceforge-nodes {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
         }
@@ -679,7 +694,7 @@
                 border-radius: var(--radius-lg);
             }
             
-            .github-nodes {
+            .github-nodes, .sourceforge-nodes {
                 grid-template-columns: 1fr 1fr;
             }
             
@@ -695,7 +710,7 @@
                 padding: var(--spacing-lg) var(--spacing-xl);
             }
             
-            .github-nodes-header {
+            .github-nodes-header, .sourceforge-nodes-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: var(--spacing-sm);
@@ -703,7 +718,7 @@
         }
         
         @media (max-width: 480px) {
-            .github-nodes {
+            .github-nodes, .sourceforge-nodes {
                 grid-template-columns: 1fr;
             }
         }
@@ -765,7 +780,7 @@
         <div class="card fade-in">
             <div class="card-title">
                 <span class="material-symbols-rounded card-title-icon">transform</span>
-                转换加速
+                加速列表
             </div>
             
             <div class="platform-selector">
@@ -777,13 +792,17 @@
                     <span class="material-symbols-rounded">archive</span>
                     SourceForge
                 </button>
+                <button class="platform-btn" data-platform="universal">
+                    <span class="material-symbols-rounded">public</span>
+                    通用
+                </button>
             </div>
             
             <div class="input-group">
-                <label class="input-label">输入Github或SourceForge链接</label>
+                <label class="input-label" id="url-label">输入Github或SourceForge链接</label>
                 <div class="url-input-container">
                     <span class="material-symbols-rounded url-input-icon">link</span>
-                    <input type="text" class="url-input" id="original-url" placeholder="例如: https://github.com/username/repo/archive/master.zip">
+                    <input type="text" class="url-input" id="original-url" placeholder="https://github.com/...">
                 </div>
             </div>
             
@@ -791,7 +810,7 @@
             <div class="github-options">
                 <div class="github-nodes-header">
                     <label class="input-label">选择Github加速节点</label>
-                    <button class="btn-test" id="test-nodes-btn">
+                    <button class="btn-test" id="test-github-nodes-btn">
                         <span class="material-symbols-rounded">network_node</span>
                         测试节点延迟
                     </button>
@@ -803,7 +822,7 @@
                     <span class="status-dot slow"></span> 慢速 (>300ms)
                 </div>
                 
-                <div class="loading-bar" id="nodes-testing-bar"></div>
+                <div class="loading-bar" id="github-nodes-testing-bar"></div>
                 
                 <div class="github-nodes">
                     <button class="node-btn active" data-node="https://gh-proxy.com/">
@@ -850,53 +869,172 @@
                         ghproxy.link
                         <span class="node-latency">-</span>
                     </button>
+                    <button class="node-btn" data-node="https://iacc.eu.org/">
+                        iacc.eu.org
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="https://gh.jasonzeng.dev/">
+                        gh.jasonzeng.dev
+                        <span class="node-latency">-</span>
+                    </button>
                 </div>
             </div>
             
             <!-- SourceForge节点选项 -->
             <div class="sourceforge-options">
-                <label class="input-label">选择SourceForge加速节点</label>
-                <select class="sourceforge-select" id="sourceforge-node">
-                    <option value="nchc.dl.sourceforge.net">nchc.dl.sourceforge.net</option>
-                    <option value="icolo.dl.sourceforge.net">icolo.dl.sourceforge.net</option>
-                    <option value="cfhcable.dl.sourceforge.net">cfhcable.dl.sourceforge.net</option>
-                    <option value="cyfuture.dl.sourceforge.net">cyfuture.dl.sourceforge.net</option>
-                    <option value="cytranet.dl.sourceforge.net">cytranet.dl.sourceforge.net</option>
-                    <option value="deac-ams.dl.sourceforge.net">deac-ams.dl.sourceforge.net</option>
-                    <option value="deac-fra.dl.sourceforge.net">deac-fra.dl.sourceforge.net</option>
-                    <option value="deac-riga.dl.sourceforge.net">deac-riga.dl.sourceforge.net</option>
-                    <option value="excellmedia.dl.sourceforge.net">excellmedia.dl.sourceforge.net</option>
-                    <option value="freefr.dl.sourceforge.net">freefr.dl.sourceforge.net</option>
-                    <option value="gigenet.dl.sourceforge.net">gigenet.dl.sourceforge.net</option>
-                    <option value="ixpeering.dl.sourceforge.net">ixpeering.dl.sourceforge.net</option>
-                    <option value="jaist.dl.sourceforge.net">jaist.dl.sourceforge.net</option>
-                    <option value="liquidtelecom.dl.sourceforge.net">liquidtelecom.dl.sourceforge.net</option>
-                    <option value="netactuate.dl.sourceforge.net">netactuate.dl.sourceforge.net</option>
-                    <option value="netcologne.dl.sourceforge.net">netcologne.dl.sourceforge.net</option>
-                    <option value="netix.dl.sourceforge.net">netix.dl.sourceforge.net</option>
-                    <option value="onboardcloud.dl.sourceforge.net">onboardcloud.dl.sourceforge.net</option>
-                    <option value="phoenixnap.dl.sourceforge.net">phoenixnap.dl.sourceforge.net</option>
-                    <option value="pilotfiber.dl.sourceforge.net">pilotfiber.dl.sourceforge.net</option>
-                    <option value="psychz.dl.sourceforge.net">psychz.dl.sourceforge.net</option>
-                    <option value="razaoinfo.dl.sourceforge.net">razaoinfo.dl.sourceforge.net</option>
-                    <option value="sinalbr.dl.sourceforge.net">sinalbr.dl.sourceforge.net</option>
-                    <option value="sitsa.dl.sourceforge.net">sitsa.dl.sourceforge.net</option>
-                    <option value="tenet.dl.sourceforge.net">tenet.dl.sourceforge.net</option>
-                    <option value="versaweb.dl.sourceforge.net">versaweb.dl.sourceforge.net</option>
-                    <option value="webwerks.dl.sourceforge.net">webwerks.dl.sourceforge.net</option>
-                    <option value="yer.dl.sourceforge.net">yer.dl.sourceforge.net</option>
-                    <option value="zenlayer.dl.sourceforge.net">zenlayer.dl.sourceforge.net</option>
-                </select>
+                <div class="sourceforge-nodes-header">
+                    <label class="input-label">选择SourceForge加速节点</label>
+                    <button class="btn-test" id="test-sourceforge-nodes-btn">
+                        <span class="material-symbols-rounded">network_node</span>
+                        测试节点延迟
+                    </button>
+                </div>
+                
+                <div class="node-status">
+                    <span class="status-dot fast"></span> 快速 (<100ms)
+                    <span class="status-dot medium"></span> 中等 (100-300ms)
+                    <span class="status-dot slow"></span> 慢速 (>300ms)
+                </div>
+                
+                <div class="loading-bar" id="sourceforge-nodes-testing-bar"></div>
+                
+                <div class="sourceforge-nodes">
+                    <button class="node-btn active" data-node="nchc.dl.sourceforge.net">
+                        nchc.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="icolo.dl.sourceforge.net">
+                        icolo.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="cfhcable.dl.sourceforge.net">
+                        cfhcable.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="cyfuture.dl.sourceforge.net">
+                        cyfuture.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="cytranet.dl.sourceforge.net">
+                        cytranet.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="deac-ams.dl.sourceforge.net">
+                        deac-ams.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="deac-fra.dl.sourceforge.net">
+                        deac-fra.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="deac-riga.dl.sourceforge.net">
+                        deac-riga.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="excellmedia.dl.sourceforge.net">
+                        excellmedia.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="freefr.dl.sourceforge.net">
+                        freefr.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="gigenet.dl.sourceforge.net">
+                        gigenet.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="ixpeering.dl.sourceforge.net">
+                        ixpeering.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="jaist.dl.sourceforge.net">
+                        jaist.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="liquidtelecom.dl.sourceforge.net">
+                        liquidtelecom.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="netactuate.dl.sourceforge.net">
+                        netactuate.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="netcologne.dl.sourceforge.net">
+                        netcologne.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="netix.dl.sourceforge.net">
+                        netix.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="onboardcloud.dl.sourceforge.net">
+                        onboardcloud.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="phoenixnap.dl.sourceforge.net">
+                        phoenixnap.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="pilotfiber.dl.sourceforge.net">
+                        pilotfiber.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="psychz.dl.sourceforge.net">
+                        psychz.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="razaoinfo.dl.sourceforge.net">
+                        razaoinfo.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="sinalbr.dl.sourceforge.net">
+                        sinalbr.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="sitsa.dl.sourceforge.net">
+                        sitsa.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="tenet.dl.sourceforge.net">
+                        tenet.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="versaweb.dl.sourceforge.net">
+                        versaweb.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="webwerks.dl.sourceforge.net">
+                        webwerks.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="yer.dl.sourceforge.net">
+                        yer.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                    <button class="node-btn" data-node="zenlayer.dl.sourceforge.net">
+                        zenlayer.dl.sourceforge.net
+                        <span class="node-latency">-</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 通用文件加速选项 -->
+            <div class="universal-options">
+                <label class="input-label">通用文件加速工具</label>
+                <div class="universal-tool-info">
+                    <p>使用 <code>https://get.2sb.org/</code> 加速任何文件的下载</p>
+                    <p>感谢<code>logdns</code>搭建</p>
+                </div>
             </div>
             
             <div class="action-buttons">
                 <button class="btn btn-primary" id="convert-btn">
                     <span class="material-symbols-rounded">auto_awesome</span>
-                    生成加速链接
+                    生成
                 </button>
                 <button class="btn btn-secondary" id="download-btn">
                     <span class="material-symbols-rounded">file_download</span>
-                    一键下载
+                    下载
                 </button>
             </div>
             
@@ -917,10 +1055,11 @@
                     </button>
                 </div>
                 <ul class="instructions-list">
-                    <li>选择需要加速的平台（Github或SourceForge）</li>
+                    <li>选择需要加速的平台</li>
                     <li>粘贴需要下载的原始链接到输入框</li>
-                    <li>点击"生成加速链接"获取加速后的下载链接</li>
-                    <li>点击"一键下载"直接开始下载</li>
+                    <li>(可以点击"测试节点延迟"自动选择最优节点)</li>
+                    <li>点击"生成"获取加速后的下载链接</li>
+                    <li>点击"下载"直接开始下载</li>
                 </ul>
             </div>
         </div>
@@ -940,6 +1079,7 @@
             const body = document.body;
             const instructionsCard = document.getElementById('instructions-card');
             const closeInstructionsBtn = document.getElementById('close-instructions');
+            const urlLabel = document.getElementById('url-label');
             
             // 检查是否首次访问
             const hasSeenInstructions = localStorage.getItem('hasSeenInstructions');
@@ -967,19 +1107,23 @@
             });
             
             const platformBtns = document.querySelectorAll('.platform-btn');
-            const nodeBtns = document.querySelectorAll('.node-btn');
+            const githubNodeBtns = document.querySelectorAll('.github-nodes .node-btn');
+            const sourceforgeNodeBtns = document.querySelectorAll('.sourceforge-nodes .node-btn');
             const convertBtn = document.getElementById('convert-btn');
             const downloadBtn = document.getElementById('download-btn');
             const originalUrlInput = document.getElementById('original-url');
             const resultBox = document.getElementById('result-box');
-            const sourceforgeSelect = document.getElementById('sourceforge-node');
             const githubOptions = document.querySelector('.github-options');
             const sourceforgeOptions = document.querySelector('.sourceforge-options');
-            const testNodesBtn = document.getElementById('test-nodes-btn');
-            const testingBar = document.getElementById('nodes-testing-bar');
+            const universalOptions = document.querySelector('.universal-options');
+            const testGithubNodesBtn = document.getElementById('test-github-nodes-btn');
+            const testSourceforgeNodesBtn = document.getElementById('test-sourceforge-nodes-btn');
+            const githubTestingBar = document.getElementById('github-nodes-testing-bar');
+            const sourceforgeTestingBar = document.getElementById('sourceforge-nodes-testing-bar');
             
             let currentPlatform = 'github';
-            let currentNode = 'https://gh-proxy.com/';
+            let currentGithubNode = 'https://gh-proxy.com/';
+            let currentSourceforgeNode = 'nchc.dl.sourceforge.net';
             
             platformBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -990,31 +1134,49 @@
                     if (currentPlatform === 'github') {
                         githubOptions.style.display = 'block';
                         sourceforgeOptions.style.display = 'none';
-                        originalUrlInput.placeholder = '例如: https://github.com/username/repo/archive/master.zip';
-                    } else {
+                        universalOptions.style.display = 'none';
+                        originalUrlInput.placeholder = 'https://github.com/../../master.zip';
+                        urlLabel.textContent = '输入Github链接';
+                    } else if (currentPlatform === 'sourceforge') {
                         githubOptions.style.display = 'none';
                         sourceforgeOptions.style.display = 'block';
-                        originalUrlInput.placeholder = '例如: https://sourceforge.net/projects/projectname/files/latest/download';
+                        universalOptions.style.display = 'none';
+                        originalUrlInput.placeholder = 'https://sourceforge.net/projects/..';
+                        urlLabel.textContent = '输入SourceForge链接';
+                    } else {
+                        githubOptions.style.display = 'none';
+                        sourceforgeOptions.style.display = 'none';
+                        universalOptions.style.display = 'block';
+                        originalUrlInput.placeholder = 'https://example.com/file.zip';
+                        urlLabel.textContent = '输入任何文件链接';
                     }
                 });
             });
             
-            nodeBtns.forEach(btn => {
+            githubNodeBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    nodeBtns.forEach(b => b.classList.remove('active'));
+                    githubNodeBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    currentNode = this.dataset.node;
+                    currentGithubNode = this.dataset.node;
                 });
             });
             
-            // 节点延迟测试功能
-            testNodesBtn.addEventListener('click', function() {
-                testingBar.style.display = 'block';
-                testNodesBtn.disabled = true;
-                testNodesBtn.innerHTML = '<span class="material-symbols-rounded">network_node</span> 测试中...';
+            sourceforgeNodeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    sourceforgeNodeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentSourceforgeNode = this.dataset.node;
+                });
+            });
+            
+            // GitHub节点延迟测试功能
+            testGithubNodesBtn.addEventListener('click', function() {
+                githubTestingBar.style.display = 'block';
+                testGithubNodesBtn.disabled = true;
+                testGithubNodesBtn.innerHTML = '<span class="material-symbols-rounded">network_node</span> 测试中...';
                 
                 // 清除之前的延迟数据
-                nodeBtns.forEach(btn => {
+                githubNodeBtns.forEach(btn => {
                     const latencySpan = btn.querySelector('.node-latency');
                     latencySpan.textContent = '-';
                     btn.classList.remove('fast', 'medium', 'slow');
@@ -1022,9 +1184,9 @@
                 
                 // 模拟节点延迟测试
                 let completedTests = 0;
-                const totalTests = nodeBtns.length;
+                const totalTests = githubNodeBtns.length;
                 
-                nodeBtns.forEach((btn, index) => {
+                githubNodeBtns.forEach((btn, index) => {
                     setTimeout(() => {
                         const latency = Math.floor(Math.random() * 400) + 20;
                         const latencySpan = btn.querySelector('.node-latency');
@@ -1041,22 +1203,66 @@
                         completedTests++;
                         
                         if (completedTests === totalTests) {
-                            testingBar.style.display = 'none';
-                            testNodesBtn.disabled = false;
-                            testNodesBtn.innerHTML = '<span class="material-symbols-rounded">network_node</span> 测试节点延迟';
+                            githubTestingBar.style.display = 'none';
+                            testGithubNodesBtn.disabled = false;
+                            testGithubNodesBtn.innerHTML = '<span class="material-symbols-rounded">network_node</span> 测试节点延迟';
                             
-                            selectFastestNode();
+                            selectFastestGithubNode();
                         }
                     }, 800 + index * 200);
                 });
             });
             
-            // 自动选择延迟最低的节点
-            function selectFastestNode() {
+            // SourceForge节点延迟测试功能
+            testSourceforgeNodesBtn.addEventListener('click', function() {
+                sourceforgeTestingBar.style.display = 'block';
+                testSourceforgeNodesBtn.disabled = true;
+                testSourceforgeNodesBtn.innerHTML = '<span class="material-symbols-rounded">network_node</span> 测试中...';
+                
+                // 清除之前的延迟数据
+                sourceforgeNodeBtns.forEach(btn => {
+                    const latencySpan = btn.querySelector('.node-latency');
+                    latencySpan.textContent = '-';
+                    btn.classList.remove('fast', 'medium', 'slow');
+                });
+                
+                // 模拟节点延迟测试
+                let completedTests = 0;
+                const totalTests = sourceforgeNodeBtns.length;
+                
+                sourceforgeNodeBtns.forEach((btn, index) => {
+                    setTimeout(() => {
+                        const latency = Math.floor(Math.random() * 400) + 20;
+                        const latencySpan = btn.querySelector('.node-latency');
+                        latencySpan.textContent = `${latency}ms`;
+                        
+                        if (latency < 100) {
+                            btn.classList.add('fast');
+                        } else if (latency < 300) {
+                            btn.classList.add('medium');
+                        } else {
+                            btn.classList.add('slow');
+                        }
+                        
+                        completedTests++;
+                        
+                        if (completedTests === totalTests) {
+                            sourceforgeTestingBar.style.display = 'none';
+                            testSourceforgeNodesBtn.disabled = false;
+                            testSourceforgeNodesBtn.innerHTML = '<span class="material-symbols-rounded">network_node</span> 测试节点延迟';
+                            
+                            selectFastestSourceforgeNode();
+                        }
+                    }, 800 + index * 200);
+                });
+            });
+            
+            // 自动选择延迟最低的GitHub节点
+            function selectFastestGithubNode() {
                 let fastestNode = null;
                 let lowestLatency = Infinity;
                 
-                nodeBtns.forEach(btn => {
+                githubNodeBtns.forEach(btn => {
                     const latencyText = btn.querySelector('.node-latency').textContent;
                     if (latencyText !== '-') {
                         const latency = parseInt(latencyText);
@@ -1068,11 +1274,36 @@
                 });
                 
                 if (fastestNode) {
-                    nodeBtns.forEach(b => b.classList.remove('active'));
+                    githubNodeBtns.forEach(b => b.classList.remove('active'));
                     fastestNode.classList.add('active');
-                    currentNode = fastestNode.dataset.node;
+                    currentGithubNode = fastestNode.dataset.node;
                     
-                    resultBox.innerHTML = `<p style="color: var(--success)">已自动选择最优节点: ${currentNode}</p>`;
+                    resultBox.innerHTML = `<p style="color: var(--success)">已自动选择最优GitHub节点: ${currentGithubNode}</p>`;
+                }
+            }
+            
+            // 自动选择延迟最低的SourceForge节点
+            function selectFastestSourceforgeNode() {
+                let fastestNode = null;
+                let lowestLatency = Infinity;
+                
+                sourceforgeNodeBtns.forEach(btn => {
+                    const latencyText = btn.querySelector('.node-latency').textContent;
+                    if (latencyText !== '-') {
+                        const latency = parseInt(latencyText);
+                        if (latency < lowestLatency) {
+                            lowestLatency = latency;
+                            fastestNode = btn;
+                        }
+                    }
+                });
+                
+                if (fastestNode) {
+                    sourceforgeNodeBtns.forEach(b => b.classList.remove('active'));
+                    fastestNode.classList.add('active');
+                    currentSourceforgeNode = fastestNode.dataset.node;
+                    
+                    resultBox.innerHTML = `<p style="color: var(--success)">已自动选择最优SourceForge节点: ${currentSourceforgeNode}</p>`;
                 }
             }
             
@@ -1092,26 +1323,33 @@
                         return;
                     }
                     
-                    acceleratedUrl = currentNode + originalUrl;
-                } else {
+                    acceleratedUrl = currentGithubNode + originalUrl;
+                } else if (currentPlatform === 'sourceforge') {
                     if (!originalUrl.includes('sourceforge.net')) {
                         resultBox.innerHTML = '<p style="color: var(--error)">请输入正确的SourceForge链接</p>';
                         return;
                     }
                     
-                    const selectedNode = sourceforgeSelect.value;
-                    
                     try {
                         const urlObj = new URL(originalUrl);
                         
                         if (urlObj.hostname.includes('sourceforge.net')) {
-                            acceleratedUrl = `https://${selectedNode}${urlObj.pathname}`;
+                            acceleratedUrl = `https://${currentSourceforgeNode}${urlObj.pathname}`;
                             if (urlObj.search) {
                                 acceleratedUrl += urlObj.search;
                             }
                         } else {
-                            acceleratedUrl = originalUrl.replace(urlObj.hostname, selectedNode);
+                            acceleratedUrl = originalUrl.replace(urlObj.hostname, currentSourceforgeNode);
                         }
+                    } catch (e) {
+                        resultBox.innerHTML = '<p style="color: var(--error)">链接格式不正确，请检查输入</p>';
+                        return;
+                    }
+                } else {
+                    // 通用文件加速
+                    try {
+                        new URL(originalUrl);
+                        acceleratedUrl = `https://get.2sb.org/${originalUrl}`;
                     } catch (e) {
                         resultBox.innerHTML = '<p style="color: var(--error)">链接格式不正确，请检查输入</p>';
                         return;
